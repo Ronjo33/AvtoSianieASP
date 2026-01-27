@@ -1,0 +1,11 @@
+﻿namespace AvtoSianieASP.Models
+{
+    public class Category
+    {
+       public int Id { get; set; }
+         public string Name { get; set; }
+        public DateTime DateOn { get; set; } 
+        
+        public ICollection<Servece> Servces { get; set; }
+    }
+}
