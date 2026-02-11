@@ -5,7 +5,7 @@ using Microsoft.Identity.Client;
 
 namespace AvtoSianieASP.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<Custumer>
+    public class ApplicationDbContext : IdentityDbContext<Customer>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
