@@ -1,5 +1,6 @@
 using AvtoSianieASP.Data;
 using AvtoSianieASP.Models;
+using AvtoSianieASP.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,9 +25,10 @@ namespace AvtoSianieASP
             
 
             builder.Services.AddControllersWithViews();
-            
+            builder.Services.AddControllers(op=>op.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
             var app = builder.Build();
-           
+           app.PrepareDataBase().Wait();   
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

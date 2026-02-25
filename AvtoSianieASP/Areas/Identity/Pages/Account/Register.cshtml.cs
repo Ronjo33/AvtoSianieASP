@@ -78,6 +78,8 @@ namespace AvtoSianieASP.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            public string UserName { get; set; }
+            [Required]
             [Display(Name = "Име")]
             public string FirstName { get; set; }
 
@@ -86,7 +88,7 @@ namespace AvtoSianieASP.Areas.Identity.Pages.Account
             [Display(Name = "Фамилия")]
             public string LastName { get; set; }
 
-
+            
 
             [Display(Name = "Телефон")]
             public string PhoneNumber { get; set; }
