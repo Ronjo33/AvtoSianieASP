@@ -26,7 +26,8 @@ namespace AvtoSianieASP
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddControllers(op=>op.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-
+            builder.Services.AddRazorPages();
+           
             var app = builder.Build();
            app.PrepareDataBase().Wait();   
             // Configure the HTTP request pipeline.
@@ -44,6 +45,7 @@ namespace AvtoSianieASP
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

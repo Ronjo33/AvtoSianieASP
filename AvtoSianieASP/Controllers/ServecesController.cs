@@ -48,7 +48,7 @@ namespace AvtoSianieASP.Controllers
         // GET: Serveces/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace AvtoSianieASP.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", servece.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", servece.CategoryId);
             return View(servece);
         }
 
