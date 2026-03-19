@@ -49,8 +49,8 @@ namespace AvtoSianieASP.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Id");
+            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Name");
+            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Name");
             return View();
         }
 
@@ -59,16 +59,17 @@ namespace AvtoSianieASP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CustomerId,ServeceId,Massage,DateOn")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,CustomerId,ServeceId,Massage")] Order order)
         {
+            order.DateOn = DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", order.CustomerId);
-            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Id", order.ServeceId);
+            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Name", order.CustomerId);
+            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Name", order.ServeceId);
             return View(order);
         }
 
@@ -85,8 +86,8 @@ namespace AvtoSianieASP.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", order.CustomerId);
-            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Id", order.ServeceId);
+            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Name", order.CustomerId);
+            ViewData["ServeceId"] = new SelectList(_context.Serveces, "Id", "Name", order.ServeceId);
             return View(order);
         }
 
@@ -95,8 +96,9 @@ namespace AvtoSianieASP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,ServeceId,Massage,DateOn")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,ServeceId,Massage")] Order order)
         {
+            order.DateOn = DateTime.Now;
             if (id != order.Id)
             {
                 return NotFound();

@@ -14,16 +14,19 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="KatNum" class="control-label"></label>
-                <input asp-for="KatNum" class="form-control" />
-                <span asp-validation-for="KatNum" class="text-danger"></span>
-            </div>
+
+            <!-- KatNum е скрито поле -->
+            <input asp-for="KatNum" type="hidden" />
+
+            <!-- DateOn е скрито поле -->
+            <input asp-for="DateOn" type="hidden" />
+
             <div class="form-group">
                 <label asp-for="DescSurves" class="control-label"></label>
                 <input asp-for="DescSurves" class="form-control" />
                 <span asp-validation-for="DescSurves" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label class="control-label">Category</label>
                 <select asp-for="CategoryId"
@@ -31,6 +34,7 @@
                         asp-items="ViewBag.CategoryId">
                 </select>
             </div>
+
             <div class="form-group">
                 <label asp-for="Equipment" class="control-label"></label>
                 <select asp-for="Equipment"
@@ -39,26 +43,25 @@
                 </select>
                 <span asp-validation-for="Equipment" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Duration" class="control-label"></label>
                 <input asp-for="Duration" class="form-control" />
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DateOn" class="control-label"></label>
-                <input asp-for="DateOn" class="form-control" />
-                <span asp-validation-for="DateOn" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -71,5 +74,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

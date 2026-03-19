@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AvtoSianieASP.Data;
+using AvtoSianieASP.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AvtoSianieASP.Data;
-using AvtoSianieASP.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AvtoSianieASP.Controllers
 {
@@ -46,6 +46,7 @@ namespace AvtoSianieASP.Controllers
         }
 
         // GET: Serveces/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
@@ -53,14 +54,33 @@ namespace AvtoSianieASP.Controllers
         }
 
         // POST: Serveces/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,KatNum,DescSurves,CategoryId,Equipment,Duration,Image,Price,DateOn")] Servece servece)
+        public async Task<IActionResult> Create([Bind("Id,DescSurves,CategoryId,Equipment,Duration,Image,Price")] Servece servece)
         {
             if (ModelState.IsValid)
             {
+                // Автоматично KatNum
+                var lastKatNum = await _context.Serveces
+                    .OrderByDescending(s => s.Id)
+                    .Select(s => s.KatNum)
+                    .FirstOrDefaultAsync();
+
+                int nextNumber = 1;
+                if (!string.IsNullOrEmpty(lastKatNum) && lastKatNum.StartsWith("USL-"))
+                {
+                    string numPart = lastKatNum.Substring(4);
+                    if (int.TryParse(numPart, out int lastNumber))
+                    {
+                        nextNumber = lastNumber + 1;
+                    }
+                }
+
+                servece.KatNum = $"USL-{nextNumber:000}";
+
+                // Автоматично текуща дата и час
+                servece.DateOn = DateTime.Now;
+
                 _context.Add(servece);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -70,6 +90,7 @@ namespace AvtoSianieASP.Controllers
         }
 
         // GET: Serveces/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,8 +108,6 @@ namespace AvtoSianieASP.Controllers
         }
 
         // POST: Serveces/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,KatNum,DescSurves,CategoryId,Equipment,Duration,Image,Price,DateOn")] Servece servece)
@@ -123,6 +142,7 @@ namespace AvtoSianieASP.Controllers
         }
 
         // GET: Serveces/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

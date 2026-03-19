@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using static AvtoSianieASP.Models.TypesAuto;
 
 namespace AvtoSianieASP.Models
 {
+    [Index(nameof(KatNum), IsUnique = true)]
     public class Servece
     {
         public int Id { get; set; }
