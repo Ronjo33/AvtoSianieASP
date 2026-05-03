@@ -29,3 +29,64 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.page-hero {
+    background: linear-gradient(135deg, #111827, #374151);
+    color: white;
+    padding: 35px;
+    border-radius: 22px;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #facc15;
+    font-weight: 700;
+}
+
+.glass-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.btn-brand {
+    background: #111827;
+    color: white;
+    border-radius: 12px;
+    padding: 10px 22px;
+}
+
+    .btn-brand:hover {
+        background: #facc15;
+        color: #111827;
+    }
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    gap: 12px;
+}
+
+.time-chip {
+    border: 2px solid #22c55e;
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .time-chip input {
+        display: none;
+    }
+
+    .time-chip:has(input:checked) {
+        background: #22c55e;
+        color: white;
+    }
+
+    .time-chip.is-busy {
+        border-color: #ef4444;
+        background: #fee2e2;
+        color: #991b1b;
+        cursor: not-allowed;
+    }

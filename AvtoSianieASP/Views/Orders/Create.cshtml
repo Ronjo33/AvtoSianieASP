@@ -1,46 +1,65 @@
 ﻿@model AvtoSianieASP.Models.Order
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Нова резервация";
+    var hours = ViewData["Hours"] as List<string> ?? new List<string>();
+    var busyHours = ViewData["BusyHours"] as List<string> ?? new List<string>();
 }
 
-<h1>Create</h1>
-
-<h4>Order</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ServeceId" class="control-label"></label>
-                <select asp-for="ServeceId" class ="form-control" asp-items="ViewBag.ServeceId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Massage" class="control-label"></label>
-                <input asp-for="Massage" class="form-control" />
-                <span asp-validation-for="Massage" class="text-danger"></span>
-            </div>
-         @*    <div class="form-group">
-                <label asp-for="DateOn" class="control-label"></label>
-                <input asp-for="DateOn" class="form-control" />
-                <span asp-validation-for="DateOn" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page-hero mb-4">
+    <div>
+        <p class="eyebrow">Нова резервация</p>
+        <h1>Запази час</h1>
+        <p>Попълни данните и избери свободен час.</p>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="glass-card p-4 col-lg-7">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="CustomerId" class="form-label"></label>
+            <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.CustomerId"></select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ServeceId" class="form-label"></label>
+            <select asp-for="ServeceId" class="form-select" asp-items="ViewBag.ServeceId"></select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ReservationDate" class="form-label"></label>
+            <input asp-for="ReservationDate" type="date" class="form-control" />
+        </div>
+
+        <label class="form-label">Час</label>
+        <div class="time-grid mb-3">
+            @foreach (var hour in hours)
+            {
+                var isBusy = busyHours.Contains(hour);
+
+                <label class="time-chip @(isBusy ? "is-busy" : "")">
+                    <input type="radio" name="ReservationTime" value="@hour" disabled="@isBusy" />
+                    <span>@hour</span>
+                </label>
+            }
+        </div>
+
+        <span asp-validation-for="ReservationTime" class="text-danger"></span>
+
+        <div class="mb-3">
+            <label asp-for="Massage" class="form-label"></label>
+            <textarea asp-for="Massage" class="form-control"></textarea>
+            <span asp-validation-for="Massage" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-brand">Запази</button>
+        <a asp-action="Calendar" class="btn btn-outline-secondary ms-2">Календар</a>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

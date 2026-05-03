@@ -1,0 +1,53 @@
+﻿@model AvtoSianieASP.Models.Order
+@{
+    ViewData["Title"] = "Календар";
+    var hours = ViewData["Hours"] as List<string> ?? new List<string>();
+    var busyHours = ViewData["BusyHours"] as List<string> ?? new List<string>();
+}
+
+<div class="page-hero mb-4">
+    <div>
+        <p class="eyebrow">Резервации</p>
+        <h1>Календар за часове</h1>
+        <p>Избери дата и виж кои часове са свободни или заети.</p>
+    </div>
+</div>
+
+<div class="glass-card p-4">
+    <form asp-action="Calendar" method="get" class="mb-4">
+        <label class="form-label">Избери дата</label>
+        <input type="date"
+               name="date"
+               value="@Model.ReservationDate.ToString("yyyy-MM-dd")"
+               class="form-control"
+               onchange="this.form.submit()" />
+    </form>
+
+    <h3 class="mb-3">Часове за @Model.ReservationDate.ToString("dd.MM.yyyy")</h3>
+
+    <div class="time-grid">
+        @foreach (var hour in hours)
+        {
+            var isBusy = busyHours.Contains(hour);
+
+            <div class="time-chip @(isBusy ? "is-busy" : "")">
+                <strong>@hour</strong>
+
+                @if (isBusy)
+                {
+                    <div>Заето</div>
+                }
+                else
+                {
+                    <div class="mt-2">
+                        <a asp-action="Create"
+                           asp-route-date="@Model.ReservationDate.ToString("yyyy-MM-dd")"
+                           class="btn btn-sm btn-brand">
+                            Запази
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
