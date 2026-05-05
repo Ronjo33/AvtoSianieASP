@@ -1,8 +1,40 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Avto Sianie";
 }
+<section class="hero-red" style="background-image: url('/images/ChatGPT Image May 5, 2026, 07_22_53 PM.png');">
+    <div class="hero-overlay"></div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class="hero-content">
+        <p class="hero-small">Професионална грижа за твоя автомобил</p>
+        <h1>Avto Sianie</h1>
+        <p class="hero-text">
+            Детайлинг, пастиране, полиране и цялостна визия за твоята кола.
+        </p>
+
+        <div class="hero-buttons">
+            <a asp-controller="Orders" asp-action="Calendar" class="btn btn-red">
+                Запази час
+            </a>
+            <a asp-controller="Serveces" asp-action="Index" class="btn btn-outline-red">
+                Виж услуги
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="home-cards">
+    <div class="service-card-red">
+        <h3>Пастиране</h3>
+        <p>Възстановяване на блясъка и премахване на леки драскотини.</p>
+    </div>
+
+    <div class="service-card-red">
+        <h3>Полиране</h3>
+        <p>Професионално полиране за дълбок и чист финиш.</p>
+    </div>
+
+    <div class="service-card-red">
+        <h3>Интериор</h3>
+        <p>Почистване и освежаване на салона.</p>
+    </div>
+</section>

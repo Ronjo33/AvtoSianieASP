@@ -5,40 +5,38 @@
     var busyHours = ViewData["BusyHours"] as List<string> ?? new List<string>();
 }
 
-<div class="page-hero mb-4">
-    <div>
-        <p class="eyebrow">Нова резервация</p>
-        <h1>Запази час</h1>
-        <p>Попълни данните и избери свободен час.</p>
-    </div>
+<div class="booking-hero mb-4">
+    <p class="eyebrow">Нова резервация</p>
+    <h1>Запази час</h1>
+    <p>Попълни данните и избери свободен час.</p>
 </div>
 
-<div class="glass-card p-4 col-lg-7">
+<div class="booking-card">
     <form asp-action="Create" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <div class="mb-3">
             <label asp-for="CustomerId" class="form-label"></label>
-            <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.CustomerId"></select>
+            <select asp-for="CustomerId" class="form-select dark-input" asp-items="ViewBag.CustomerId"></select>
         </div>
 
         <div class="mb-3">
             <label asp-for="ServeceId" class="form-label"></label>
-            <select asp-for="ServeceId" class="form-select" asp-items="ViewBag.ServeceId"></select>
+            <select asp-for="ServeceId" class="form-select dark-input" asp-items="ViewBag.ServeceId"></select>
         </div>
 
         <div class="mb-3">
             <label asp-for="ReservationDate" class="form-label"></label>
-            <input asp-for="ReservationDate" type="date" class="form-control" />
+            <input asp-for="ReservationDate" type="date" class="form-control dark-input" />
         </div>
 
         <label class="form-label">Час</label>
-        <div class="time-grid mb-3">
+        <div class="booking-time-grid mb-3">
             @foreach (var hour in hours)
             {
                 var isBusy = busyHours.Contains(hour);
 
-                <label class="time-chip @(isBusy ? "is-busy" : "")">
+                <label class="booking-time-chip @(isBusy ? "busy" : "")">
                     <input type="radio" name="ReservationTime" value="@hour" disabled="@isBusy" />
                     <span>@hour</span>
                 </label>
@@ -49,12 +47,12 @@
 
         <div class="mb-3">
             <label asp-for="Massage" class="form-label"></label>
-            <textarea asp-for="Massage" class="form-control"></textarea>
+            <textarea asp-for="Massage" class="form-control dark-input" rows="4"></textarea>
             <span asp-validation-for="Massage" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-brand">Запази</button>
-        <a asp-action="Calendar" class="btn btn-outline-secondary ms-2">Календар</a>
+        <button type="submit" class="booking-btn">Запази</button>
+        <a asp-action="Calendar" class="booking-btn-outline ms-2">Календар</a>
     </form>
 </div>
 

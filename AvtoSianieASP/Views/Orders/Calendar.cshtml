@@ -5,47 +5,44 @@
     var busyHours = ViewData["BusyHours"] as List<string> ?? new List<string>();
 }
 
-<div class="page-hero mb-4">
-    <div>
-        <p class="eyebrow">Резервации</p>
-        <h1>Календар за часове</h1>
-        <p>Избери дата и виж кои часове са свободни или заети.</p>
-    </div>
+<div class="calendar-hero mb-4">
+    <p class="eyebrow">Резервации</p>
+    <h1>Календар за часове</h1>
+    <p>Избери дата и виж кои часове са свободни.</p>
 </div>
 
-<div class="glass-card p-4">
-    <form asp-action="Calendar" method="get" class="mb-4">
-        <label class="form-label">Избери дата</label>
+<div class="calendar-card">
+    <form asp-action="Calendar" method="get" class="calendar-date-box">
+        <label>Избери дата</label>
         <input type="date"
                name="date"
                value="@Model.ReservationDate.ToString("yyyy-MM-dd")"
-               class="form-control"
                onchange="this.form.submit()" />
     </form>
 
-    <h3 class="mb-3">Часове за @Model.ReservationDate.ToString("dd.MM.yyyy")</h3>
+    <h3>Часове за @Model.ReservationDate.ToString("dd.MM.yyyy")</h3>
 
-    <div class="time-grid">
+    <div class="calendar-time-grid">
         @foreach (var hour in hours)
         {
             var isBusy = busyHours.Contains(hour);
 
-            <div class="time-chip @(isBusy ? "is-busy" : "")">
-                <strong>@hour</strong>
+            <div class="calendar-time-card @(isBusy ? "busy" : "free")">
+                <span class="time">@hour</span>
 
                 @if (isBusy)
                 {
-                    <div>Заето</div>
+                    <span class="status busy-text">Заето</span>
                 }
                 else
                 {
-                    <div class="mt-2">
-                        <a asp-action="Create"
-                           asp-route-date="@Model.ReservationDate.ToString("yyyy-MM-dd")"
-                           class="btn btn-sm btn-brand">
-                            Запази
-                        </a>
-                    </div>
+                    <span class="status free-text">Свободно</span>
+
+                    <a asp-action="Create"
+                       asp-route-date="@Model.ReservationDate.ToString("yyyy-MM-dd")"
+                       class="calendar-btn">
+                        Запази
+                    </a>
                 }
             </div>
         }
