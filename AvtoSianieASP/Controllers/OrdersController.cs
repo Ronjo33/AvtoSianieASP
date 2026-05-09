@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -38,12 +39,31 @@ namespace AvtoSianieASP.Controllers
             return View(orders);
         }
 
-        public IActionResult Calendar(DateTime? date)
+        [Authorize]
+        public async Task<IActionResult> MyReservations()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var orders = await _context.Orders
+                .Include(o => o.Services)
+                .Where(o => o.CustomerId == userId)
+                .OrderByDescending(o => o.ReservationDate)
+                .ThenBy(o => o.ReservationTime)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+        public IActionResult Calendar(DateTime? date, int? serveceId)
         {
             var selectedDate = (date ?? DateTime.Today).Date;
-            PrepareOrderViewData(selectedDate);
+            PrepareOrderViewData(selectedDate, selectedServeceId: serveceId);
 
-            return View(new Order { ReservationDate = selectedDate });
+            return View(new Order
+            {
+                ReservationDate = selectedDate,
+                ServeceId = serveceId ?? 0
+            });
         }
 
         public async Task<IActionResult> GetBusyHours(DateTime date)
@@ -56,26 +76,39 @@ namespace AvtoSianieASP.Controllers
             return Json(busyHours);
         }
 
-        public IActionResult Create(DateTime? date)
+        [Authorize]
+        public IActionResult Create(DateTime? date, int? serveceId)
         {
             var selectedDate = (date ?? DateTime.Today).Date;
-            PrepareOrderViewData(selectedDate);
+            PrepareOrderViewData(selectedDate, selectedServeceId: serveceId);
 
-            return View(new Order { ReservationDate = selectedDate });
+            return View(new Order
+            {
+                ReservationDate = selectedDate,
+                ServeceId = serveceId ?? 0,
+                Massage = "Няма съобщение"
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CustomerId,ServeceId,Massage,ReservationDate,ReservationTime")] Order order)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("Id,ServeceId,Massage,ReservationDate,ReservationTime")] Order order)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            order.CustomerId = userId;
             order.DateOn = DateTime.Now;
             order.ReservationDate = order.ReservationDate.Date;
 
             if (string.IsNullOrWhiteSpace(order.Massage))
                 order.Massage = "Няма съобщение";
 
-            if (!WorkingHours.Contains(order.ReservationTime))
+            if (string.IsNullOrWhiteSpace(order.ReservationTime) || !WorkingHours.Contains(order.ReservationTime))
                 ModelState.AddModelError(nameof(order.ReservationTime), "Избери валиден час.");
+
+            if (order.ServeceId <= 0)
+                ModelState.AddModelError(nameof(order.ServeceId), "Избери услуга.");
 
             var isTaken = await _context.Orders.AnyAsync(o =>
                 o.ReservationDate.Date == order.ReservationDate.Date &&
@@ -89,13 +122,10 @@ namespace AvtoSianieASP.Controllers
                 _context.Add(order);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Calendar), new
-                {
-                    date = order.ReservationDate.ToString("yyyy-MM-dd")
-                });
+                return RedirectToAction(nameof(MyReservations));
             }
 
-            PrepareOrderViewData(order.ReservationDate);
+            PrepareOrderViewData(order.ReservationDate, selectedServeceId: order.ServeceId);
             return View(order);
         }
 
@@ -139,7 +169,7 @@ namespace AvtoSianieASP.Controllers
             if (string.IsNullOrWhiteSpace(order.Massage))
                 order.Massage = "Няма съобщение";
 
-            if (!WorkingHours.Contains(order.ReservationTime))
+            if (string.IsNullOrWhiteSpace(order.ReservationTime) || !WorkingHours.Contains(order.ReservationTime))
                 ModelState.AddModelError(nameof(order.ReservationTime), "Избери валиден час.");
 
             var isTaken = await _context.Orders.AnyAsync(o =>
@@ -194,16 +224,29 @@ namespace AvtoSianieASP.Controllers
 
         private void PrepareOrderViewData(DateTime selectedDate, string? selectedCustomerId = null, int? selectedServeceId = null, string? selectedHour = null)
         {
-            var customers = _context.Users.ToList();
-            var services = _context.Serveces.ToList();
+            var customers = _context.Users
+                .Select(u => new
+                {
+                    u.Id,
+                    DisplayName = u.Email
+                })
+                .ToList();
+
+            var services = _context.Serveces
+                .Select(s => new
+                {
+                    s.Id,
+                    Name = s.DescSurves
+                })
+                .ToList();
 
             var busyHours = _context.Orders
                 .Where(o => o.ReservationDate.Date == selectedDate.Date)
                 .Select(o => o.ReservationTime)
                 .ToList();
 
-            ViewData["CustomerId"] = new SelectList(customers, "Id", "Username", selectedCustomerId);
-            ViewData["ServeceId"] = new SelectList(services, "Id", "DescSurves", selectedServeceId);
+            ViewData["CustomerId"] = new SelectList(customers, "Id", "DisplayName", selectedCustomerId);
+            ViewData["ServeceId"] = new SelectList(services, "Id", "Name", selectedServeceId);
             ViewData["Hours"] = WorkingHours;
             ViewData["BusyHours"] = busyHours;
             ViewData["SelectedHour"] = selectedHour;

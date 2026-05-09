@@ -1,6 +1,7 @@
 ﻿@model AvtoSianieASP.Models.Order
 @{
     ViewData["Title"] = "Нова резервация";
+
     var hours = ViewData["Hours"] as List<string> ?? new List<string>();
     var busyHours = ViewData["BusyHours"] as List<string> ?? new List<string>();
 }

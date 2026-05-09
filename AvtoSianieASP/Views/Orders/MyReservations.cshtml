@@ -1,0 +1,43 @@
+﻿@model IEnumerable<AvtoSianieASP.Models.Order>
+
+@{
+    ViewData["Title"] = "Моите резервации";
+}
+
+<div class="calendar-hero mb-4">
+    <p class="eyebrow">Профил</p>
+    <h1>Моите резервации</h1>
+    <p>Тук виждаш всички часове, които си запазил.</p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="booking-card">
+        <h3>Все още нямаш резервации.</h3>
+        <p>Избери услуга и запази първия си час.</p>
+
+        <a asp-controller="Serveces" asp-action="Index" class="booking-btn">
+            Виж услуги
+        </a>
+    </div>
+}
+else
+{
+    <div class="services-grid">
+        @foreach (var item in Model)
+        {
+            <div class="service-card-red">
+                <h3>@item.Services?.DescSurves</h3>
+
+                <p><strong>Дата:</strong> @item.ReservationDate.ToString("dd.MM.yyyy")</p>
+                <p><strong>Час:</strong> @item.ReservationTime</p>
+                <p><strong>Съобщение:</strong> @item.Massage</p>
+
+                @if (item.Services != null)
+                {
+                    <p class="service-price">@item.Services.Price лв.</p>
+                }
+            </div>
+        }
+    </div>
+}

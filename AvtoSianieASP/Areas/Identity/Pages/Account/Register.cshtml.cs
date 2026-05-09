@@ -124,7 +124,6 @@ namespace AvtoSianieASP.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                //var user = CreateUser();
                 Customer customer = new Customer();
                 customer.Email = Input.Email;
                 customer.FirstName = Input.FirstName;
@@ -132,9 +131,9 @@ namespace AvtoSianieASP.Areas.Identity.Pages.Account
                 customer.PhoneNumber = Input.PhoneNumber;
                 customer.Adress = Input.Adress;
 
-
-                await _userStore.SetUserNameAsync(customer, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(customer, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(customer, Input.Email, CancellationToken.None);
+
                 var result = await _userManager.CreateAsync(customer, Input.Password);
 
                 if (result.Succeeded)

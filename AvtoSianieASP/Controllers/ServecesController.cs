@@ -19,33 +19,25 @@ namespace AvtoSianieASP.Controllers
             _context = context;
         }
 
-        // GET: Serveces
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Serveces.Include(s => s.Categories);
-            return View(await applicationDbContext.ToListAsync());
+            var services = _context.Serveces.Include(s => s.Categories);
+            return View(await services.ToListAsync());
         }
 
-        // GET: Serveces/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var servece = await _context.Serveces
                 .Include(s => s.Categories)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (servece == null)
-            {
-                return NotFound();
-            }
+
+            if (servece == null) return NotFound();
 
             return View(servece);
         }
 
-        // GET: Serveces/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -53,23 +45,30 @@ namespace AvtoSianieASP.Controllers
             return View();
         }
 
-        // POST: Serveces/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,DescSurves,CategoryId,Equipment,Duration,Image,Price")] Servece servece)
         {
+            if (string.IsNullOrWhiteSpace(servece.DescSurves))
+                servece.DescSurves = "Нова услуга";
+
+            if (string.IsNullOrWhiteSpace(servece.Image))
+                servece.Image = "/images/homeimg.jpg";
+
             if (ModelState.IsValid)
             {
-                // Автоматично KatNum
                 var lastKatNum = await _context.Serveces
                     .OrderByDescending(s => s.Id)
                     .Select(s => s.KatNum)
                     .FirstOrDefaultAsync();
 
                 int nextNumber = 1;
+
                 if (!string.IsNullOrEmpty(lastKatNum) && lastKatNum.StartsWith("USL-"))
                 {
                     string numPart = lastKatNum.Substring(4);
+
                     if (int.TryParse(numPart, out int lastNumber))
                     {
                         nextNumber = lastNumber + 1;
@@ -77,45 +76,49 @@ namespace AvtoSianieASP.Controllers
                 }
 
                 servece.KatNum = $"USL-{nextNumber:000}";
-
-                // Автоматично текуща дата и час
                 servece.DateOn = DateTime.Now;
 
                 _context.Add(servece);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", servece.CategoryId);
-            return View(servece);
-        }
 
-        // GET: Serveces/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var servece = await _context.Serveces.FindAsync(id);
-            if (servece == null)
-            {
-                return NotFound();
-            }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", servece.CategoryId);
             return View(servece);
         }
 
-        // POST: Serveces/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var servece = await _context.Serveces.FindAsync(id);
+
+            if (servece == null) return NotFound();
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", servece.CategoryId);
+            return View(servece);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,KatNum,DescSurves,CategoryId,Equipment,Duration,Image,Price,DateOn")] Servece servece)
         {
-            if (id != servece.Id)
-            {
-                return NotFound();
-            }
+            if (id != servece.Id) return NotFound();
+
+            if (string.IsNullOrWhiteSpace(servece.DescSurves))
+                servece.DescSurves = "Нова услуга";
+
+            if (string.IsNullOrWhiteSpace(servece.Image))
+                servece.Image = "/images/homeimg.jpg";
+
+            if (string.IsNullOrWhiteSpace(servece.KatNum))
+                servece.KatNum = $"USL-{servece.Id:000}";
+
+            if (servece.DateOn == default)
+                servece.DateOn = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -127,52 +130,45 @@ namespace AvtoSianieASP.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ServeceExists(servece.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", servece.CategoryId);
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", servece.CategoryId);
             return View(servece);
         }
 
-        // GET: Serveces/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var servece = await _context.Serveces
                 .Include(s => s.Categories)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (servece == null)
-            {
-                return NotFound();
-            }
+
+            if (servece == null) return NotFound();
 
             return View(servece);
         }
 
-        // POST: Serveces/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var servece = await _context.Serveces.FindAsync(id);
+
             if (servece != null)
             {
                 _context.Serveces.Remove(servece);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
