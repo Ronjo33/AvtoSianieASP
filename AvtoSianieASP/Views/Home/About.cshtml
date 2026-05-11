@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "За нас";
+}
+
+<div class="about-hero mb-4">
+    <p class="eyebrow">Avto Sianie</p>
+    <h1>За нас</h1>
+    <p>Професионална грижа за твоя автомобил.</p>
+</div>
+
+<div class="about-grid">
+    <div class="about-card">
+        <h2>Avto Sianie</h2>
+
+        <p>
+            Ние предлагаме качествени авто услуги, детайлинг, почистване,
+            пастиране и грижа за автомобила ти.
+        </p>
+
+        <p><strong>Име:</strong> Zlatomir Atanasov Stefanov</p>
+        <p><strong>Адрес:</strong> ул. Отец Паисий 11, гр. Сопот</p>
+        <p><strong>Телефон:</strong> 0898562554</p>
+
+        <a class="booking-btn" asp-controller="Orders" asp-action="Calendar">
+            Запази час
+        </a>
+    </div>
+
+    <div class="about-card">
+        <h2>Къде се намираме</h2>
+
+        <iframe class="about-map"
+                src="https://www.google.com/maps?q=Отец%20Паисий%2011%20Сопот&output=embed"
+                loading="lazy">
+        </iframe>
+    </div>
+</div>
