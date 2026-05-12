@@ -21,6 +21,14 @@ namespace AvtoSianieASP.Controllers
         {
             return View();
         }
+        public IActionResult Gallery()
+        {
+            return View();
+        }
+        public IActionResult Promotions()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

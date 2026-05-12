@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Промоции";
+}
+
+<div class="calendar-hero mb-5">
+    <p class="eyebrow">AVTO SIANIE</p>
+    <h1>Промоции</h1>
+    <p>Специални оферти за почистване, детайлинг и защита на автомобила.</p>
+</div>
+
+<div class="promo-grid">
+    <div class="promo-card">
+        <span class="promo-badge">-20%</span>
+        <h3>Вътрешно почистване</h3>
+        <p>Прахосмукачка, табло, седалки, кори и освежаване на купето.</p>
+        <div class="promo-price">
+            <span class="old-price">50 €</span>
+            <span>40 €</span>
+        </div>
+        <a asp-controller="Orders" asp-action="Calendar" class="btn btn-red w-100">Запази час</a>
+    </div>
+
+    <div class="promo-card">
+        <span class="promo-badge">ТОП</span>
+        <h3>Пастиране + полиране</h3>
+        <p>Възстановяване на блясъка и премахване на леки драскотини.</p>
+        <div class="promo-price">
+            <span class="old-price">150 €</span>
+            <span>120 €</span>
+        </div>
+        <a asp-controller="Orders" asp-action="Calendar" class="btn btn-red w-100">Запази час</a>
+    </div>
+
+    <div class="promo-card">
+        <span class="promo-badge">ПАКЕТ</span>
+        <h3>Пълен детайлинг</h3>
+        <p>Външно измиване, интериор, полиране и финална защита.</p>
+        <div class="promo-price">
+            <span class="old-price">300 €</span>
+            <span>250 €</span>
+        </div>
+        <a asp-controller="Orders" asp-action="Calendar" class="btn btn-red w-100">Запази час</a>
+    </div>
+</div>
+
+<div class="articles-section mt-5">
+    <h2>Полезни статии</h2>
+
+    <div class="article-grid">
+        <div class="article-card">
+            <h3>Колко често трябва да се почиства интериорът?</h3>
+            <p>Препоръчително е поне веднъж месечно, особено ако колата се кара ежедневно.</p>
+        </div>
+
+        <div class="article-card">
+            <h3>Защо пастирането е важно?</h3>
+            <p>То премахва леки дефекти и връща дълбочината на боята.</p>
+        </div>
+
+        <div class="article-card">
+            <h3>Как да запазиш блясъка след детайлинг?</h3>
+            <p>Измивай с правилни препарати и избягвай автоматични четки.</p>
+        </div>
+    </div>
+</div>
