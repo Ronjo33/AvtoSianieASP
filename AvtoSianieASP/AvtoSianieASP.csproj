@@ -24,5 +24,13 @@
     <Folder Include="wwwroot\images\gallery\" />
     <Folder Include="wwwroot\images\services\" />
   </ItemGroup>
+	<ItemGroup>
+		<None Update="Data\AvtoSianie12dZlatomir.mdf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 
+		<None Update="Data\AvtoSianie12dZlatomir_log.ldf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
